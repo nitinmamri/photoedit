@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>👮‍♀️ A4 Photo Layout Live Editor</title>
+  <title>👨‍✈️ A4 Photo Layout Live Editor</title>
   <style>
     :root{
       --bg:#f4f7fb;
@@ -19,7 +19,9 @@
       --sidebar-w:370px;
       --sidebar-collapsed-w:64px;
       --pageShift:0px;
+      --pgX:0px;
     }
+
 
     *{box-sizing:border-box;margin:0;padding:0}
     body{
@@ -32,6 +34,7 @@
       overflow-x:hidden;
     }
 
+
     .app{
       max-width: 1360px;
       margin: 0 auto;
@@ -39,6 +42,7 @@
       gap:22px;
       align-items:flex-start;
     }
+
 
     .panel{
       width:var(--sidebar-w);
@@ -54,7 +58,9 @@
       flex:0 0 auto;
     }
 
+
     .panel.collapsed{ width:var(--sidebar-collapsed-w); }
+
 
     .panel .header{
       padding:16px 18px;
@@ -67,6 +73,7 @@
       gap:10px;
       letter-spacing:.2px;
     }
+
 
     .toggle-btn{
       border:none;
@@ -81,7 +88,9 @@
       transition:.2s ease;
     }
 
+
     .toggle-btn:hover{ background:rgba(255,255,255,.24); }
+
 
     .panel-body{
       padding:16px;
@@ -90,9 +99,12 @@
       background-color: #0ea5e9;
     }
 
+
     .panel.collapsed .panel-body{ display:none; }
 
+
     .field{ margin-bottom:14px; }
+
 
     .field label{
       display:block;
@@ -101,6 +113,7 @@
       margin-bottom:8px;
       color:#0f172a;
     }
+
 
     input[type="file"]{
       width:100%;
@@ -111,11 +124,13 @@
       cursor:pointer;
     }
 
+
     .size-grid{
       display:grid;
       grid-template-columns: repeat(4, 1fr);
       gap:8px;
     }
+
 
     .size-btn{
       display:flex;
@@ -131,6 +146,7 @@
       transition:.2s ease;
     }
 
+
     .size-btn:hover{ transform: translateY(-1px); }
     .size-btn input{display:none;}
     .size-btn.active{
@@ -141,7 +157,9 @@
       box-shadow:0 8px 18px rgba(37,99,235,.10);
     }
 
+
     .sliders{ display:grid; gap:12px; }
+
 
     .slider{
       background:#000000;
@@ -149,6 +167,7 @@
       border-radius:16px;
       padding:10px 12px;
     }
+
 
     .slider-top{
       display:flex;
@@ -158,13 +177,16 @@
       font-size:14px;
     }
 
+
     .slider-top strong{ font-weight:700; color:#ffffff; }
     .slider-top span{ color:#ffffff; font-size:13px; }
+
 
     input[type="range"]{
       width:100%;
       accent-color:var(--primary);
     }
+
 
     .actions{
       display:flex;
@@ -172,6 +194,7 @@
       flex-wrap:wrap;
       margin-top:14px;
     }
+
 
     .btn{
       border:none;
@@ -183,6 +206,7 @@
       transition:.2s ease;
     }
 
+
     .btn:hover{ transform: translateY(-1px); }
     .btn-primary{
       background:linear-gradient(135deg,var(--primary-2),var(--primary));
@@ -192,6 +216,7 @@
       background:#e5e7eb;
       color:#111827;
     }
+
 
     .preview{
       flex:1;
@@ -203,6 +228,7 @@
       min-width:0;
     }
 
+
     .preview-head{
       padding:16px 18px;
       background:linear-gradient(135deg,#0f172a,#1e293b);
@@ -213,6 +239,7 @@
       justify-content:space-between;
       align-items:center;
     }
+
 
     .preview-page{
       width:210mm;
@@ -226,13 +253,15 @@
       box-shadow:0 10px 24px rgba(15,23,42,.06);
     }
 
+
     .grid-wrap{
       width:100%;
       display:flex;
       justify-content:center;
       align-items:flex-start;
-      transform: translateY(var(--pageShift));
+      transform: translateX(var(--pgX)) translateY(var(--pageShift));
     }
+
 
     .grid{
       display:grid;
@@ -244,9 +273,11 @@
       padding-top:0;
     }
 
+
     .grid-3,.grid-6,.grid-9,.grid-12{
       grid-template-columns: repeat(3, 1.2in);
     }
+
 
     .photo{
       width:1.2in;
@@ -258,6 +289,7 @@
       border-radius:6px;
     }
 
+
     .photo img{
       width:100%;
       height:100%;
@@ -267,6 +299,7 @@
       filter: brightness(var(--br, 100%)) contrast(var(--ct, 100%)) saturate(var(--sa, 100%)) blur(var(--bl, 0px)) grayscale(var(--gs, 0%));
       transform-origin:center center;
     }
+
 
     .placeholder{
       position:absolute;
@@ -280,6 +313,7 @@
       text-align:center;
       line-height:1.4;
     }
+
 
     @media print{
       @page{ size:A4; margin:0; }
@@ -298,7 +332,7 @@
         box-shadow:none;
       }
       .grid-wrap{
-        transform: translateY(var(--pageShift));
+        transform: translateX(var(--pgX)) translateY(var(--pageShift));
       }
     }
   </style>
@@ -316,6 +350,7 @@
           <input type="file" id="singlePhoto" accept="image/*">
         </div>
 
+
         <div class="field">
           <label>Layout</label>
           <div class="size-grid">
@@ -326,6 +361,7 @@
           </div>
         </div>
 
+
         <div class="sliders">
           <div class="slider"><div class="slider-top"><strong>Brightness</strong><span id="v-br">100%</span></div><input type="range" id="brightness" min="0" max="200" value="100"></div>
           <div class="slider"><div class="slider-top"><strong>Contrast</strong><span id="v-ct">100%</span></div><input type="range" id="contrast" min="0" max="200" value="100"></div>
@@ -334,17 +370,20 @@
           <div class="slider"><div class="slider-top"><strong>Grayscale</strong><span id="v-gs">0%</span></div><input type="range" id="grayscale" min="0" max="100" value="0"></div>
           <div class="slider"><div class="slider-top"><strong>Rotate</strong><span id="v-rot">0deg</span></div><input type="range" id="rotate" min="-45" max="45" value="0"></div>
           <div class="slider"><div class="slider-top"><strong>Zoom</strong><span id="v-zoom">100%</span></div><input type="range" id="zoom" min="80" max="150" value="100"></div>
-          <div class="slider"><div class="slider-top"><strong>Move X</strong><span id="v-tx">0%</span></div><input type="range" id="moveX" min="-30" max="30" value="0"></div>
-          <div class="slider"><div class="slider-top"><strong>Move Y</strong><span id="v-ty">0%</span></div><input type="range" id="moveY" min="-30" max="30" value="0"></div>
-          <div class="slider"><div class="slider-top"><strong>Page Shift</strong><span id="v-page">0px</span></div><input type="range" id="pageShift" min="-80" max="80" value="0"></div>
+          <div class="slider"><div class="slider-top"><strong>Move X (Photo)</strong><span id="v-tx">0%</span></div><input type="range" id="moveX" min="-30" max="30" value="0"></div>
+          <div class="slider"><div class="slider-top"><strong>Move Y (Photo)</strong><span id="v-ty">0%</span></div><input type="range" id="moveY" min="-30" max="30" value="0"></div>
+          <div class="slider"><div class="slider-top"><strong>Page Shift Y</strong><span id="v-page">0px</span></div><input type="range" id="pageShift" min="-80" max="80" value="0"></div>
+          <div class="slider"><div class="slider-top"><strong>Page Shift X (Left/Right)</strong><span id="v-pgx">0px</span></div><input type="range" id="pageShiftX" min="-210" max="210" value="0"></div>
         </div>
 
+
         <div class="actions">
-          <button class="btn btn-primary" onclick="window.print()">Print / Save PDF</button>
+          <button class="btn btn-primary" onclick="window.print()">Print / SAVE PDF</button>
           <button class="btn btn-light" onclick="resetAdjustments()">Reset</button>
         </div>
       </div>
     </div>
+
 
     <div class="preview">
       <div class="preview-head">
@@ -363,8 +402,10 @@
     </div>
   </div>
 
+
   <script>
     let currentPhotoData = null;
+
 
     const fileInput = document.getElementById('singlePhoto');
     const grid = document.getElementById('photoGrid');
@@ -373,6 +414,7 @@
     const panel = document.getElementById('leftPanel');
     const togglePanel = document.getElementById('togglePanel');
     const panelTitle = document.getElementById('panelTitle');
+
 
     const sliders = {
       brightness: document.getElementById('brightness'),
@@ -384,8 +426,10 @@
       zoom: document.getElementById('zoom'),
       moveX: document.getElementById('moveX'),
       moveY: document.getElementById('moveY'),
-      pageShift: document.getElementById('pageShift')
+      pageShift: document.getElementById('pageShift'),
+      pageShiftX: document.getElementById('pageShiftX')
     };
+
 
     function updateLabels() {
       document.getElementById('v-br').textContent = sliders.brightness.value + '%';
@@ -398,7 +442,9 @@
       document.getElementById('v-tx').textContent = sliders.moveX.value + '%';
       document.getElementById('v-ty').textContent = sliders.moveY.value + '%';
       document.getElementById('v-page').textContent = sliders.pageShift.value + 'px';
+      document.getElementById('v-pgx').textContent = sliders.pageShiftX.value + 'px';
     }
+
 
     function applyEffects() {
       const imgs = document.querySelectorAll('.photo img');
@@ -414,17 +460,21 @@
         img.style.setProperty('--ty', sliders.moveY.value + '%');
       });
       document.documentElement.style.setProperty('--pageShift', sliders.pageShift.value + 'px');
+      document.documentElement.style.setProperty('--pgX', sliders.pageShiftX.value + 'px');
     }
+
 
     function getCount() {
       return Number(document.querySelector('input[name="photoOption"]:checked').value);
     }
+
 
     function setActiveSize(val) {
       sizeBtns.forEach(btn => btn.classList.remove('active'));
       const active = sizeBtns.find(btn => btn.querySelector('input').value === String(val));
       if (active) active.classList.add('active');
     }
+
 
     function renderGrid(count) {
       grid.innerHTML = '';
@@ -440,6 +490,7 @@
       applyEffects();
     }
 
+
     fileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -451,6 +502,7 @@
       reader.readAsDataURL(file);
     });
 
+
     optionInputs.forEach(input => {
       input.addEventListener('change', () => {
         const count = Number(input.value);
@@ -459,12 +511,14 @@
       });
     });
 
+
     Object.values(sliders).forEach(slider => {
       slider.addEventListener('input', () => {
         updateLabels();
         applyEffects();
       });
     });
+
 
     function resetAdjustments() {
       sliders.brightness.value = 100;
@@ -477,15 +531,18 @@
       sliders.moveX.value = 0;
       sliders.moveY.value = 0;
       sliders.pageShift.value = 0;
+      sliders.pageShiftX.value = 0;
       updateLabels();
       applyEffects();
     }
+
 
     togglePanel.addEventListener('click', () => {
       panel.classList.toggle('collapsed');
       togglePanel.textContent = panel.classList.contains('collapsed') ? '☰' : '×';
       panelTitle.style.display = panel.classList.contains('collapsed') ? 'none' : 'inline';
     });
+
 
     updateLabels();
     renderGrid(3);
